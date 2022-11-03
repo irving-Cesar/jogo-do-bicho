@@ -1,4 +1,4 @@
-# jogo do bixo
+# jogo do bicho
 
 userScript criado para o site "https://www.resultadofacil.com.br"
 
