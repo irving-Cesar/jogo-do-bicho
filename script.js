@@ -170,7 +170,7 @@ async function getFetch() {
         //pegando os resultados do ano - apenas 1° premio
         $(htmlData.querySelectorAll('table td')).filter("tr:nth-child(1) td:nth-child(4)").each(function(i, e) {
 
-          let element = $('[data-animal2=' +$(this).text()+']');
+          let element = $('[data-animal2=' +$(this).text().normalize("NFD").replace(/[^a-zA-Z\s]/g, "")+']');
           $('#animais-na-cabeca-anual')[0].childNodes ? $(divContent2).children('span').remove() : ""
 
           if (element.length) {
@@ -181,7 +181,8 @@ async function getFetch() {
                                             element.css('border', 'solid white 1px')) : ""
 
           } else {
-            divContent2.append('<div class="nome" data-animal2= "'+$(this).text()+'">' + $(this).text() +': <span>1</span></div>');
+            divContent2.append('<div class="nome" data-animal2= "'+$(this).text().normalize("NFD").replace(/[^a-zA-Z\s]/g, "")+'">' +
+                               $(this).text() +': <span>1</span></div>');
           }
 
         });
