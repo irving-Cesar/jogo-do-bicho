@@ -94,7 +94,8 @@ async function getFetch() {
       class: "div-content"
     });
 
-    $(divContent2).append($("<h3> Animais 1° prêmio (do ano) </h3>").addClass("text-title"));
+    $(divContent2).append($("<h3> Animais 1° prêmio (do ano):</h3>").addClass("text-title"));
+    $(divContent2).append('<span>Carregando...</span> ');
 
     $(contentPai).append(divContent);
     $(contentPai).append(divContent2);
@@ -170,6 +171,7 @@ async function getFetch() {
         $(htmlData.querySelectorAll('table td')).filter("tr:nth-child(1) td:nth-child(4)").each(function(i, e) {
 
           let element = $('[data-animal2=' +$(this).text()+']');
+          $('#animais-na-cabeca-anual')[0].childNodes ? $(divContent2).children('span').remove() : ""
 
           if (element.length) {
             let numero = element.children('span');
