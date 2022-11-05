@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        resultadofacil
 // @namespace   Violentmonkey Scripts
-// @match       *://www.resultadofacil.com.br/*
+// @match       *://www.resultadofacil.com.br/resultado-do-jogo-do-bicho/*
 // @grant       none
 // @version     1.0
 // @author      - Irving Cesar
@@ -14,7 +14,7 @@ let div = $('<div />', {
 })
 
 $('.sidenav').append(div);
-$(div).append($("<h3> Animais mais sorteados </h3>").addClass("text-title"));
+$(div).append($("<h3> Animais mais sorteados do dia </h3>").addClass("text-title"));
 
 $("table td").filter("td:nth-child(4)").each(function(idx, el) {
   let elemento = $("[data-numero = " + $(this).text() + "]");
@@ -42,7 +42,7 @@ let div2 = $('<div />', {
 })
 
 $('.sidenav').append(div2);
-$("#animais-na-cabeca").append($("<h3> Animais na cabeça </h3>").addClass("text-title"));
+$("#animais-na-cabeca").append($("<h3> Animais 1° prêmio (do dia)</h3>").addClass("text-title"));
 
 $('table td').filter("tr:nth-child(1) td:nth-child(4)").each(function (i, e) {
   let elemento = $('[nome-animal = ' +$(this).text() + ']');
@@ -61,7 +61,86 @@ $('div [nome-animal]').sort(function(a, b) {
   return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
 }).each(function(i, e) {
   $('#animais-na-cabeca').append(e);
-})
+});
+
+
+//Separando animais mais sorteados dos meses (apenas os 2 meses anteriores do mes atual). Ex: mês novembro => jogos de setembro e outubro
+async function getFetch() {
+  try {
+
+    var meses = ["Janeiro", "Fevereiro","Março", "Abril", "Maio", "Junho", "Julho",  "Agosto",  "Setembro",  "Outubro",   "Novembro",  "Dezembro"];
+    let date = new Date();
+    var urlSite = "";
+
+    //div content
+    var divContent = $('<div />', {
+      id: "animais-mais-sorteados-meses",
+      class: "div-content"
+    });
+
+    $(divContent).append($("<h3> Animais mais sorteados dos meses: <span></span> </h3>").addClass("text-title"));
+
+    console.log($(divContent).children('h3').children('span').text(meses[date.getMonth()-1] + " e " + meses[date.getMonth()-2]  ));
+
+    $('.sidenav').append(divContent);
+
+    function daysInMonth(mes, ano) {
+      var dataLocal = new Date(mes, ano, 0);
+      return dataLocal.getDate();
+    }
+
+    let mes = date.getMonth()-2;
+    for(mes; mes <= date.getMonth(); mes++) {
+      var dia = 1;
+      let limite = (mes != date.getMonth() ? daysInMonth(mes, date.getFullYear()) : date.getDate());
+
+      for(dia; dia <= limite; dia++) {
+        urlSite = "https://www.resultadofacil.com.br/resultado-do-jogo-do-bicho/BA/do-dia/2022-"+(mes.toString().length < 2? "0"+(mes).toString() : mes)+"-"+
+                  (dia.toString().length < 2? "0"+dia.toString() : dia);
+
+        //pegando html e convertendo em text
+        let response = await fetch(urlSite);
+        let dataText = await response.text();
+
+        //convertendo text para html
+        let dParser = new DOMParser();
+        let htmlData = dParser.parseFromString(dataText, "text/html");
+
+        //separando e pegando o valor apenas da coluna 4 das tabelas
+        $(htmlData.querySelectorAll('table td')).filter("tr:not(:contains('-')) td:nth-child(4)").each(function(i, e) {
+
+          let element = $('[data-animal=' +$(this).text()+']');
+
+          if (element.length) {
+            let numero = element.children('span');
+            numero.text(parseInt(numero.text()) + 1);
+            parseInt(numero.text()) >= 150 ? (element.css('background-color', 'green'),
+                                            element.css('color', 'white'),
+                                            element.css('border', 'solid white 1px')) : ""
+
+          } else {
+            divContent.append('<div class="nome" data-animal= "'+$(this).text()+'">' + $(this).text() +': <span>1</span></div>');
+          }
+
+        })
+
+      }
+
+    }
+
+    $("div [data-animal]").sort(function(a, b) {
+      return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
+    }).each(function(i, e) {
+      $("#animais-mais-sorteados-meses").append(e);
+    })
+
+    $('.nome').css('border-bottom', 'inset 1px');
+
+  } catch (e) {
+    console.log("Deu erro:", e);
+  }
+} getFetch();
+
 
 $('.div-content').css('border-radius', '5px')
                  .css('border-style', 'outset')
@@ -75,7 +154,4 @@ $('.text-title').css('border', 'solid gray 1.5px')
                 .css('background-color', '#F0F0FF')
                 .css('font-size', '28px');
 
-$('.nome').css('border-bottom', 'inset 1px')
-
-
-
+$('.nome').css('border-bottom', 'inset 1px');
