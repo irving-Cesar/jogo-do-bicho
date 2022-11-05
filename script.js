@@ -8,6 +8,7 @@
 // @description 02/11/2022 15:12:32
 // ==/UserScript==
 
+
 let contentPai = $("<div />", {
   id: "div-content-pai",
 });
@@ -30,7 +31,6 @@ $(div).append($("<h3> Animais mais sorteados do dia </h3>").addClass("text-title
 $(contentPai).append(div2);
 $(div2).append($("<h3> Animais 1° prêmio (do dia)</h3>").addClass("text-title"));
 
-//mais sorteados
 $("table td").filter("td:nth-child(4)").each(function(idx, el) {
   let elemento = $("[data-numero = " + $(this).text() + "]");
   if (elemento.length) {
@@ -44,7 +44,6 @@ $("table td").filter("td:nth-child(4)").each(function(idx, el) {
   }
 });
 
-//mais sorteados 1° premio
 $('table td').filter("tr:nth-child(1) td:nth-child(4)").each(function (i, e) {
   let elemento = $('[nome-animal = ' +$(this).text() + ']');
   if (elemento.length) {
@@ -58,7 +57,6 @@ $('table td').filter("tr:nth-child(1) td:nth-child(4)").each(function (i, e) {
   }
 });
 
-//ordenando por quantidade de vezes sorteada
 $("div [data-numero").sort(function(a, b) {
     return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
 }).each((i, e) => {
@@ -76,7 +74,7 @@ $('div [nome-animal]').sort(function(a, b) {
 async function getFetch() {
   try {
 
-    var meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+    var meses = ["Janeiro", "Fevereiro","Março", "Abril", "Maio", "Junho", "Julho",  "Agosto",  "Setembro",  "Outubro",   "Novembro",  "Dezembro"];
     let date = new Date();
     var urlSite = "";
 
@@ -101,19 +99,18 @@ async function getFetch() {
     $(contentPai).append(divContent);
     $(contentPai).append(divContent2);
 
-    //verificar quantos dias tem no mês
     function daysInMonth(mes, ano) {
       var dataLocal = new Date(mes, ano, 0);
       return dataLocal.getDate();
     }
-   
+
     let mes = date.getMonth()-2;
     for(mes; mes <= date.getMonth(); mes++) {
       var dia = 1;
       let limite = (mes != date.getMonth() ? daysInMonth(mes, date.getFullYear()) : date.getDate());
 
       for(dia; dia <= limite; dia++) {
-        urlSite = "https://www.resultadofacil.com.br/resultado-do-jogo-do-bicho/BA/do-dia/2022-"+(mes.toString().length < 2? "0"+(mes).toString() : mes)+"-"+
+        urlSite = "https://www.resultadofacil.com.br/resultado-do-jogo-do-bicho/BA/do-dia/2022-"+((mes+1).toString().length < 2? "0"+(mes).toString() : mes+1)+"-"+
                   (dia.toString().length < 2? "0"+dia.toString() : dia);
 
         //pegando html e convertendo em text
@@ -132,7 +129,7 @@ async function getFetch() {
           if (element.length) {
             let numero = element.children('span');
             numero.text(parseInt(numero.text()) + 1);
-            parseInt(numero.text()) >= 150 ? (element.css('background-color', 'green'),
+            parseInt(numero.text()) >= 175 ? (element.css('background-color', 'green'),
                                             element.css('color', 'white'),
                                             element.css('border', 'solid white 1px')) : ""
 
