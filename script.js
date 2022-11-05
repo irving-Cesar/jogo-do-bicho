@@ -202,7 +202,8 @@ async function getFetch() {
   } catch (e) {
     console.log("ERROR :", e);
   }
-}getFetch();
+}
+getFetch();
 
 $('.div-content').css('border-radius', '5px')
                  .css('border-style', 'outset')
