@@ -30,6 +30,7 @@ $(div).append($("<h3> Animais mais sorteados do dia </h3>").addClass("text-title
 $(contentPai).append(div2);
 $(div2).append($("<h3> Animais 1° prêmio (do dia)</h3>").addClass("text-title"));
 
+//mais sorteados
 $("table td").filter("td:nth-child(4)").each(function(idx, el) {
   let elemento = $("[data-numero = " + $(this).text() + "]");
   if (elemento.length) {
@@ -43,6 +44,7 @@ $("table td").filter("td:nth-child(4)").each(function(idx, el) {
   }
 });
 
+//mais sorteados 1° premio
 $('table td').filter("tr:nth-child(1) td:nth-child(4)").each(function (i, e) {
   let elemento = $('[nome-animal = ' +$(this).text() + ']');
   if (elemento.length) {
@@ -56,6 +58,7 @@ $('table td').filter("tr:nth-child(1) td:nth-child(4)").each(function (i, e) {
   }
 });
 
+//ordenando por quantidade de vezes sorteada
 $("div [data-numero").sort(function(a, b) {
     return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
 }).each((i, e) => {
@@ -73,7 +76,7 @@ $('div [nome-animal]').sort(function(a, b) {
 async function getFetch() {
   try {
 
-    var meses = ["Janeiro", "Fevereiro","Março", "Abril", "Maio", "Junho", "Julho",  "Agosto",  "Setembro",  "Outubro",   "Novembro",  "Dezembro"];
+    var meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
     let date = new Date();
     var urlSite = "";
 
@@ -98,11 +101,12 @@ async function getFetch() {
     $(contentPai).append(divContent);
     $(contentPai).append(divContent2);
 
+    //verificar quantos dias tem no mês
     function daysInMonth(mes, ano) {
       var dataLocal = new Date(mes, ano, 0);
       return dataLocal.getDate();
     }
-
+   
     let mes = date.getMonth()-2;
     for(mes; mes <= date.getMonth(); mes++) {
       var dia = 1;
