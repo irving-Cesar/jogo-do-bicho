@@ -8,13 +8,26 @@
 // @description 02/11/2022 15:12:32
 // ==/UserScript==
 
+
+let contentPai = $("<div />", {
+  id: "div-content-pai",
+});
+
 let div = $('<div />', {
   id: "animais-mais-sorteados",
   class: "div-content"
-})
+});
+
+let div2 = $('<div />', {
+  id: "animais-na-cabeca",
+  class: "div-content"
+});
 
 $('.sidenav').append(div);
 $(div).append($("<h3> Animais mais sorteados do dia </h3>").addClass("text-title"));
+
+$('.sidenav').append(div2);
+$(div2).append($("<h3> Animais 1° prêmio (do dia)</h3>").addClass("text-title"));
 
 $("table td").filter("td:nth-child(4)").each(function(idx, el) {
   let elemento = $("[data-numero = " + $(this).text() + "]");
@@ -27,22 +40,7 @@ $("table td").filter("td:nth-child(4)").each(function(idx, el) {
   } else {
     $(div).append('<div class="nome" data-numero ="' + $(this).text() +'">' + $(this).text() + ': <span>1</span></div>');
   }
-})
-
-$("div [data-numero").sort(function(a, b) {
-    return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text())
-}).each((i, e) => {
-    $(div).append(e)
-})
-
-
-let div2 = $('<div />', {
-  id: "animais-na-cabeca",
-  class: "div-content"
-})
-
-$('.sidenav').append(div2);
-$("#animais-na-cabeca").append($("<h3> Animais 1° prêmio (do dia)</h3>").addClass("text-title"));
+});
 
 $('table td').filter("tr:nth-child(1) td:nth-child(4)").each(function (i, e) {
   let elemento = $('[nome-animal = ' +$(this).text() + ']');
@@ -55,7 +53,13 @@ $('table td').filter("tr:nth-child(1) td:nth-child(4)").each(function (i, e) {
   } else {
     $(div2).append('<div class="nome" nome-animal="' + $(this).text() +'">' + $(this).text() + ': <span>1</span></div>');
   }
-})
+});
+
+$("div [data-numero").sort(function(a, b) {
+    return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
+}).each((i, e) => {
+    $(div).append(e);
+});
 
 $('div [nome-animal]').sort(function(a, b) {
   return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
@@ -64,7 +68,7 @@ $('div [nome-animal]').sort(function(a, b) {
 });
 
 
-//Separando animais mais sorteados dos meses (apenas os 2 meses anteriores do mes atual). Ex: mês novembro => jogos de setembro e outubro
+//Separando animais mais sorteados dos meses (apenas os 2 meses anteriores e o mes atual). Ex: mês novembro => jogos de setembro, outubro e novembro
 async function getFetch() {
   try {
 
@@ -80,9 +84,18 @@ async function getFetch() {
 
     $(divContent).append($("<h3> Animais mais sorteados dos meses: <span></span> </h3>").addClass("text-title"));
 
-    console.log($(divContent).children('h3').children('span').text(meses[date.getMonth()-1] + " e " + meses[date.getMonth()-2]  ));
+    $(divContent).children('h3').children('span').text(meses[date.getMonth()-1] + " e " + meses[date.getMonth()-2] );
+
+
+    var divContent2 = $('<div />', {
+      id: "animais-na-cabeca-anual",
+      class: "div-content"
+    });
+
+    $(divContent2).append($("<h3> Animais 1° prêmio (do ano) </h3>").addClass("text-title"));
 
     $('.sidenav').append(divContent);
+    $('.sidenav').append(divContent2);
 
     function daysInMonth(mes, ano) {
       var dataLocal = new Date(mes, ano, 0);
@@ -122,7 +135,24 @@ async function getFetch() {
             divContent.append('<div class="nome" data-animal= "'+$(this).text()+'">' + $(this).text() +': <span>1</span></div>');
           }
 
-        })
+        });
+
+        $(htmlData.querySelectorAll('table td')).filter("tr:nth-child(1) td:nth-child(4)").each(function(i, e) {
+
+          let element = $('[data-animal2=' +$(this).text()+']');
+
+          if (element.length) {
+            let numero = element.children('span');
+            numero.text(parseInt(numero.text()) + 1);
+            parseInt(numero.text()) >= 30 ? (element.css('background-color', 'green'),
+                                            element.css('color', 'white'),
+                                            element.css('border', 'solid white 1px')) : ""
+
+          } else {
+            divContent2.append('<div class="nome" data-animal2= "'+$(this).text()+'">' + $(this).text() +': <span>1</span></div>');
+          }
+
+        });
 
       }
 
@@ -134,10 +164,17 @@ async function getFetch() {
       $("#animais-mais-sorteados-meses").append(e);
     })
 
+
+    $("div [data-animal2]").sort(function(a, b) {
+      return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
+    }).each(function(i, e) {
+      $("#animais-na-cabeca-anual").append(e);
+    })
+
     $('.nome').css('border-bottom', 'inset 1px');
 
   } catch (e) {
-    console.log("Deu erro:", e);
+    console.log("ERROR :", e);
   }
 } getFetch();
 
@@ -155,3 +192,4 @@ $('.text-title').css('border', 'solid gray 1.5px')
                 .css('font-size', '28px');
 
 $('.nome').css('border-bottom', 'inset 1px');
+
