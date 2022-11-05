@@ -100,10 +100,11 @@ async function getFetch() {
     $(contentPai).append(divContent2);
 
     function daysInMonth(mes, ano) {
-      var dataLocal = new Date(mes, ano, 0);
+      var dataLocal = new Date(ano, mes, 0);
       return dataLocal.getDate();
     }
 
+    //meses anteriores
     let mes = date.getMonth()-2;
     for(mes; mes <= date.getMonth(); mes++) {
       var dia = 1;
@@ -139,6 +140,33 @@ async function getFetch() {
 
         });
 
+        $("div [data-animal]").sort(function(a, b) {
+          return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
+        }).each(function(i, e) {
+          $("#animais-mais-sorteados-meses").append(e);
+        });
+
+      }
+
+    }
+
+    //jogos do ano
+    for(let mesAno = 0; mesAno <= date.getMonth(); mesAno++) {
+      let limiteAno = (mesAno != date.getMonth() ? daysInMonth(mesAno, date.getFullYear()) : date.getDate());
+
+      for(let diaAno = 1; diaAno <= limiteAno; diaAno++) {
+        urlSite = "https://www.resultadofacil.com.br/resultado-do-jogo-do-bicho/BA/do-dia/2022-"+((mesAno+1).toString().length < 2? "0"+(mesAno).toString() : mesAno+1)+"-"+
+                  (diaAno.toString().length < 2? "0"+diaAno.toString() : diaAno);
+
+        //pegando html e convertendo em text
+        let response = await fetch(urlSite);
+        let dataText = await response.text();
+
+        //convertendo text para html
+        let dParser = new DOMParser();
+        let htmlData = dParser.parseFromString(dataText, "text/html");
+
+        //pegando os resultados do ano - apenas 1° premio
         $(htmlData.querySelectorAll('table td')).filter("tr:nth-child(1) td:nth-child(4)").each(function(i, e) {
 
           let element = $('[data-animal2=' +$(this).text()+']');
@@ -146,7 +174,7 @@ async function getFetch() {
           if (element.length) {
             let numero = element.children('span');
             numero.text(parseInt(numero.text()) + 1);
-            parseInt(numero.text()) >= 30 ? (element.css('background-color', 'green'),
+            parseInt(numero.text()) >= 115 ? (element.css('background-color', 'green'),
                                             element.css('color', 'white'),
                                             element.css('border', 'solid white 1px')) : ""
 
@@ -156,30 +184,22 @@ async function getFetch() {
 
         });
 
+
+        $("div [data-animal2]").sort(function(a, b) {
+          return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
+        }).each(function(i, e) {
+          $("#animais-na-cabeca-anual").append(e);
+        });
+
       }
-
     }
-
-    $("div [data-animal]").sort(function(a, b) {
-      return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
-    }).each(function(i, e) {
-      $("#animais-mais-sorteados-meses").append(e);
-    })
-
-
-    $("div [data-animal2]").sort(function(a, b) {
-      return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
-    }).each(function(i, e) {
-      $("#animais-na-cabeca-anual").append(e);
-    })
 
     $('.nome').css('border-bottom', 'inset 1px');
 
   } catch (e) {
     console.log("ERROR :", e);
   }
-} getFetch();
-
+}getFetch();
 
 $('.div-content').css('border-radius', '5px')
                  .css('border-style', 'outset')
