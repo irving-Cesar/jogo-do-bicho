@@ -8,7 +8,6 @@
 // @description 02/11/2022 15:12:32
 // ==/UserScript==
 
-
 let contentPai = $("<div />", {
   id: "div-content-pai",
 });
@@ -23,10 +22,12 @@ let div2 = $('<div />', {
   class: "div-content"
 });
 
-$('.sidenav').append(div);
+$('.sidenav').append(contentPai);
+$(contentPai).append(div);
+
 $(div).append($("<h3> Animais mais sorteados do dia </h3>").addClass("text-title"));
 
-$('.sidenav').append(div2);
+$(contentPai).append(div2);
 $(div2).append($("<h3> Animais 1° prêmio (do dia)</h3>").addClass("text-title"));
 
 $("table td").filter("td:nth-child(4)").each(function(idx, el) {
@@ -94,8 +95,8 @@ async function getFetch() {
 
     $(divContent2).append($("<h3> Animais 1° prêmio (do ano) </h3>").addClass("text-title"));
 
-    $('.sidenav').append(divContent);
-    $('.sidenav').append(divContent2);
+    $(contentPai).append(divContent);
+    $(contentPai).append(divContent2);
 
     function daysInMonth(mes, ano) {
       var dataLocal = new Date(mes, ano, 0);
@@ -192,4 +193,3 @@ $('.text-title').css('border', 'solid gray 1.5px')
                 .css('font-size', '28px');
 
 $('.nome').css('border-bottom', 'inset 1px');
-
