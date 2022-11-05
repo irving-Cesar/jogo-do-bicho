@@ -8,4 +8,4 @@ Gerenciador de userScript utilizado: "https://violentmonkey.github.io"
 
 obs: copiar e colar o código no console do navegador (f12 ou ctrl+shift+i), caso não tenha extensão pra usersScript.
 
-obs: na primeira vez utilizando o script, a busca pelos resultados podem demorar
+obs: na primeira vez utilizando o script, a busca pelos resultados pode demorar
