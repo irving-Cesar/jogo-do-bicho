@@ -36,26 +36,33 @@ $("table td").filter("td:nth-child(4)").each(function(idx, el) {
   if (elemento.length) {
     var numero = elemento.children('span');
     numero.text(parseInt(numero.text()) + 1);
-    parseInt(numero.text()) >= 7 ? (elemento.css('background-color', 'green'),
-                                    elemento.css('color', 'white'),
-                                    elemento.css('border', 'solid white 1px')) : ""
+      
   } else {
     $(div).append('<div class="nome" data-numero ="' + $(this).text() +'">' + $(this).text() + ': <span>1</span></div>');
   }
 });
+setTimeout(() => {
+    let firstElementDataNumero = $('[data-numero]').first().css("background-color", "green")
+                                                       .css("color", "white")
+                                                       .css("border", "solid white 1px")
+}, 500)
+
 
 $('table td').filter("tr:nth-child(1) td:nth-child(4)").each(function (i, e) {
   let elemento = $('[nome-animal = ' +$(this).text() + ']');
   if (elemento.length) {
     var numero = elemento.children('span');
     numero.text(parseInt(numero.text()) + 1);
-    parseInt(numero.text()) >= 2 ? (elemento.css('background-color', 'green'),
-                                    elemento.css('color', 'white'),
-                                    elemento.css('border', 'solid white 1px')) : ""
   } else {
     $(div2).append('<div class="nome" nome-animal="' + $(this).text() +'">' + $(this).text() + ': <span>1</span></div>');
   }
 });
+setTimeout(() => {
+    let firstElementNomeAnimal = $('[nome-animal]').first().css("background-color", "green")
+                                                       .css("color", "white")
+                                                       .css("border", "solid white 1px")
+}, 500)
+
 
 $("div [data-numero").sort(function(a, b) {
     return parseInt($(b).children('span').text()) - parseInt($(a).children('span').text());
@@ -131,9 +138,6 @@ async function getFetch() {
           if (element.length) {
             let numero = element.children('span');
             numero.text(parseInt(numero.text()) + 1);
-            parseInt(numero.text()) >= 175 ? (element.css('background-color', 'green'),
-                                            element.css('color', 'white'),
-                                            element.css('border', 'solid white 1px')) : ""
 
           } else {
             divContent.append('<div class="nome" data-animal= "'+$(this).text()+'">' + $(this).text() +': <span>1</span></div>');
@@ -150,6 +154,9 @@ async function getFetch() {
       }
 
     }
+    let firstElementDataAnimal1 = $('[data-animal]').first().css('background-color', 'green')
+                                                            .css('color', 'white')
+                                                            .css('border', 'solid white 1px')
 
     //jogos do ano
     for(let mesAno = 0; mesAno <= date.getMonth(); mesAno++) {
@@ -176,9 +183,6 @@ async function getFetch() {
           if (element.length) {
             let numero = element.children('span');
             numero.text(parseInt(numero.text()) + 1);
-            parseInt(numero.text()) >= 115 ? (element.css('background-color', 'green'),
-                                            element.css('color', 'white'),
-                                            element.css('border', 'solid white 1px')) : ""
 
           } else {
             divContent2.append('<div class="nome" data-animal2= "'+$(this).text().normalize("NFD").replace(/[^a-zA-Z\s]/g, "")+'">' +
@@ -196,6 +200,12 @@ async function getFetch() {
 
       }
     }
+      
+    let firstElementDataAnimal2 = $('[data-animal2]').first().css('background-color', 'green')
+                                                             .css('color', 'white')
+                                                             .css('border', 'solid white 1px')
+      
+    
 
     $('.nome').css('border-bottom', 'inset 1px');
 
